@@ -44,23 +44,31 @@ namespace BinaryTree
         public static void TraverseByRecursion(Node node, int counter = 1)
         {
             if (node == null) return;
-            if (node.ParentNode == null && node.Lft != null && node.Rgt != null) return;
+        
             Console.WriteLine(node.Name);
 
             if (node.Lft == null)
             {
                 node.Lft = counter++;
-            } else if (node.Lft != null && node.Rgt == null)
+            }
+            else if (node.Lft != null && node.Rgt == null)
             {
                 node.Rgt = counter++;
             }
+
+            // if node is root, lft and rgt is calculated
+            if (node.ParentNode == null && node.Lft != null && node.Rgt != null) return;
             // check if node leaf
             if ((node.Left == null && node.Right == null))
             {
                 node.Rgt = counter++;
             }
+
+
+
             if (node.ParentNode != null  &&  node.Rgt != null && node.Lft != null)
             {
+                
                 //go to right  sibling if sibling not visited
                 if(node.ParentNode.Right!=null && node.ParentNode.Right.Rgt==null && node.ParentNode.Right.Lft == null)
                 {
@@ -130,7 +138,7 @@ namespace BinaryTree
                     parentNode.Right = node;
             }
 
-            Tree.TraverseByRecursion(tree.Root);
+            Tree.TraverseByRecursion(tree.Root,1);
             foreach (var node in nodes)
             {
                 Console.WriteLine(string.Format("{0} : {1} : {2}", node.Name, node.Lft, node.Rgt));
