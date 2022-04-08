@@ -13,7 +13,7 @@ namespace BinaryTree
         public string Name;
         public int? Lft = null;
         public int? Rgt = null;
-        public Node(int Id,string Name)
+        public Node(int Id, string Name)
         {
             this.Id = Id;
             this.Name = Name;
@@ -44,9 +44,10 @@ namespace BinaryTree
         public static void TraverseByRecursion(Node node, int counter = 1)
         {
             if (node == null) return;
-        
+
             Console.WriteLine(node.Name);
 
+            // calculate lft and rgt
             if (node.Lft == null)
             {
                 node.Lft = counter++;
@@ -55,35 +56,42 @@ namespace BinaryTree
             {
                 node.Rgt = counter++;
             }
+            //if (node.ParentNode!=null && node.Left==null && node.Right==null && node.Lft!=null && node.Rgt==null)//if node is right leaf
 
-            // if node is root, lft and rgt is calculated
+            // if node is root, lft and rgt are calculated, alghoritm is finished
             if (node.ParentNode == null && node.Lft != null && node.Rgt != null) return;
-            // check if node leaf
-            if ((node.Left == null && node.Right == null))
+
+            // check if right-node leaf
+            if (node.Left == null && node.Right == null/* && node.ParentNode!=null && node.ParentNode.Right==node*/)
             {
                 node.Rgt = counter++;
             }
 
 
 
-            if (node.ParentNode != null  &&  node.Rgt != null && node.Lft != null)
+            if (node.ParentNode != null && node.Rgt != null && node.Lft != null)
             {
-                
+
                 //go to right  sibling if sibling not visited
-                if(node.ParentNode.Right!=null && node.ParentNode.Right.Rgt==null && node.ParentNode.Right.Lft == null)
+                if (node.ParentNode.Right != null && node.ParentNode.Right.Rgt == null && node.ParentNode.Right.Lft == null)
                 {
                     TraverseByRecursion(node.ParentNode.Right, counter);
                 }
                 else
                 {
                     TraverseByRecursion(node.ParentNode, counter);
-
                 }
             }
             else
             {
-                TraverseByRecursion(node.Left, counter);
-                TraverseByRecursion(node.Right, counter);
+                if (node.Left != null)
+                {
+                    TraverseByRecursion(node.Left, counter);
+                }
+                else if (node.Right != null)
+                {
+                    TraverseByRecursion(node.Right, counter);
+                }
             }
             //if(node.Lft!=null && )
 
@@ -103,15 +111,15 @@ namespace BinaryTree
             var list = new List<InputData>();
             list.Add(new InputData { Id = 1, Name = "a", ParentId = null });
             list.Add(new InputData { Id = 2, Name = "b", ParentId = 1 });
-            list.Add(new InputData { Id = 3, Name = "c", ParentId = 1});
-            list.Add(new InputData { Id = 4, Name = "d", ParentId = 2});
-            list.Add(new InputData { Id = 5, Name = "e", ParentId = 3});
-            list.Add(new InputData { Id = 6, Name = "f", ParentId = 3});
-            list.Add(new InputData { Id = 7, Name = "g", ParentId = 2});
-            list.Add(new InputData { Id = 8, Name = "i", ParentId = 4});
-            list.Add(new InputData { Id = 9, Name = "j", ParentId = 8});
+            list.Add(new InputData { Id = 3, Name = "c", ParentId = 1 });
+            list.Add(new InputData { Id = 4, Name = "d", ParentId = 2 });
+            list.Add(new InputData { Id = 5, Name = "e", ParentId = 3 });
+            list.Add(new InputData { Id = 6, Name = "f", ParentId = 3 });
+            list.Add(new InputData { Id = 7, Name = "g", ParentId = 2 });
+            list.Add(new InputData { Id = 8, Name = "i", ParentId = 4 });
+            list.Add(new InputData { Id = 9, Name = "j", ParentId = 8 });
             var nodes = new List<Node>();
-            Node? root=null;
+            Node root = null;
             foreach (var inputData in list)
             {
                 var node = new Node(inputData.Id, inputData.Name);
@@ -138,7 +146,7 @@ namespace BinaryTree
                     parentNode.Right = node;
             }
 
-            Tree.TraverseByRecursion(tree.Root,1);
+            Tree.TraverseByRecursion(tree.Root, 1);
             foreach (var node in nodes)
             {
                 Console.WriteLine(string.Format("{0} : {1} : {2}", node.Name, node.Lft, node.Rgt));
