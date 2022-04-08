@@ -41,7 +41,7 @@ namespace BinaryTree
                 stack.Push(current.Left);
             }
         }
-        public static void TraverseByRecursion(Node node, int counter = 1)
+        public void Traverse(Node node, int counter = 1)
         {
             if (node == null) return;
 
@@ -56,46 +56,43 @@ namespace BinaryTree
             {
                 node.Rgt = counter++;
             }
-            //if (node.ParentNode!=null && node.Left==null && node.Right==null && node.Lft!=null && node.Rgt==null)//if node is right leaf
 
-            // if node is root, lft and rgt are calculated, alghoritm is finished
-            if (node.ParentNode == null && node.Lft != null && node.Rgt != null) return;
-
-            // check if right-node leaf
-            if (node.Left == null && node.Right == null/* && node.ParentNode!=null && node.ParentNode.Right==node*/)
+            // check if node is leaf
+            if (node.Left == null && node.Right == null)
             {
                 node.Rgt = counter++;
             }
 
+            // if node is root, lft and rgt are calculated, alghoritm is finished
+            if (node.ParentNode == null && node.Lft != null && node.Rgt != null) return;
 
-
-            if (node.ParentNode != null && node.Rgt != null && node.Lft != null)
+            // traversing up 
+            if (node.ParentNode != null && node.Rgt != null && node.Lft != null) 
             {
 
-                //go to right  sibling if sibling not visited
+                // traverse to right  sibling if sibling not visited
                 if (node.ParentNode.Right != null && node.ParentNode.Right.Rgt == null && node.ParentNode.Right.Lft == null)
                 {
-                    TraverseByRecursion(node.ParentNode.Right, counter);
+                    Traverse(node.ParentNode.Right, counter);
                 }
-                else
+                else // traverse to parent node
                 {
-                    TraverseByRecursion(node.ParentNode, counter);
+                    Traverse(node.ParentNode, counter);
                 }
             }
+            // traversing down
             else
             {
                 if (node.Left != null)
                 {
-                    TraverseByRecursion(node.Left, counter);
+                    Traverse(node.Left, counter);
                 }
                 else if (node.Right != null)
                 {
-                    TraverseByRecursion(node.Right, counter);
+                    Traverse(node.Right, counter);
                 }
             }
-            //if(node.Lft!=null && )
-
-
+        
         }
     }
     class InputData
@@ -103,6 +100,12 @@ namespace BinaryTree
         public int Id { get; set; }
         public string Name { get; set; }
         public int? ParentId { get; set; }
+    }
+    class OutputData
+    {
+        public string Name { get; set; }
+        public int? Lft { get; set; }
+        public int? Rgt { get; set; }
     }
     class Program
     {
@@ -146,10 +149,16 @@ namespace BinaryTree
                     parentNode.Right = node;
             }
 
-            Tree.TraverseByRecursion(tree.Root, 1);
+            tree.Traverse(tree.Root);
+
+            var output = new List<OutputData>();
             foreach (var node in nodes)
             {
-                Console.WriteLine(string.Format("{0} : {1} : {2}", node.Name, node.Lft, node.Rgt));
+                output.Add(new OutputData { Name = node.Name, Lft = node.Lft, Rgt = node.Rgt });
+            }
+            foreach (var outputData in output)
+            {
+                Console.WriteLine(string.Format("{0} : {1} : {2}", outputData.Name, outputData.Lft, outputData.Rgt));
             }
         }
     }
